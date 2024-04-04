@@ -1,0 +1,29 @@
+datasource db {
+    url = env("DATABASE_URL")
+    provider = "postgresql"
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+enum status {
+    Done
+    InProgress
+}
+
+model Tasks {
+  id            Int         @map("id")          @db.Integer         @default(autoincrement())
+  title         String      @map("title")       @db.VarChar(255)
+  description   String      @map("description") @db.Text
+  order         Int?        @map("order")       @db.Integer         
+  status        status?     @map("status")                          @default(InProgress)
+  estimate      Int         @map("estimate")    @db.Integer         @default(1)
+  createdAt     DateTime    @map("created_at")  @db.Timestamp(0)    @default(now())
+  deletedAt     DateTime?   @map("deleted_at")  @db.Timestamp(0)   
+
+
+  @@id([id])
+  @@unique([id, order])
+  @@map("tasks")
+}
